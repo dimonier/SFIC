@@ -1,5 +1,6 @@
 <?php
 
+// Simple File Integrity Checker v1.1
 // Source: https://github.com/dimonier/SFIC/
 
 /*************************************
