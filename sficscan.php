@@ -1,32 +1,6 @@
 <?php
 
-/******************************************************************************
-* Copyright (c) 2013, Dmitry Ulanov, dimonier@gmail.com
-*
-* Simple  File Integrity Checker
-* Version: 1.0
-*
-* All rights reserved.
-*
-* Redistribution and use in source and binary forms, with or without
-* modification, are permitted provided that the following conditions are met:
-*     * Redistributions of source code must retain the above copyright
-*       notice, this list of conditions and the following disclaimer.
-*     * Redistributions in binary form must reproduce the above copyright
-*       notice, this list of conditions and the following disclaimer in the
-*       documentation and/or other materials provided with the distribution.
-*
-* THIS SOFTWARE IS PROVIDED ''AS IS'' AND ANY
-* EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-* WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-* DISCLAIMED. IN NO EVENT SHALL THE AUTHOR(s) BE LIABLE FOR ANY
-* DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-* (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-* LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
-* ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-* (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-* SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*******************************************************************************/
+// Source: https://github.com/dimonier/SFIC/
 
 /*************************************
  * Settings - Please EDIT values below
@@ -50,15 +24,6 @@ $servername ="Unknown";
 
 $datafilename = "data.sfic";
 $logfilename = "sfic.log";
-
-// $dirseparator = "\\"; // For Windows
-// $dirseparator = "/"; // For Linux
-// IF tries to autodetect dirseparator
-if(substr($scandir,0,1)==='/') {
-    $dirseparator = "/";
-} else {
-    $dirseparator = "\\";
-}
 
  date_default_timezone_set("UTC");
 /**
@@ -94,7 +59,7 @@ $defaultmode = "attributes";
 $emailAddressToAlert = "admin@example.com";
 $emailSubject = "Files on the '$servername' Web server have changed";
 
-$debug=TRUE;
+$debug = true;
 /**
  * Scan Password - This value has to be sent each time to run the code.
  * Please change from the default password to anything you like
@@ -125,21 +90,13 @@ function slog($string) {
 	}
 
 //STEP 2  - Check if user has sent the mode (otherwise use default mode)
-	if(isset($_REQUEST["mode"])) {
-            switch($_REQUEST["mode"])
-            {
-                case 'attributes':
-                    $mode='attributes';
-                    break;
-                case 'content':
-                    $mode='content';
-                    break;
-                default:
-                    $mode=$defaultmode;
-            }
-        } else {
-            $mode=$defaultmode;
-	}
+
+$mode = $defaultMode;
+
+$availableModes = ['attributes', 'content'];
+if(isset($_REQUEST['mode']) && in_array($_REQUEST['mode'], $availableModes)){
+$mode = $_REQUEST['mode'];
+}
 
 //STEP 2 - prepare exclusion data
 
@@ -164,7 +121,7 @@ if (isset($excludeExtensionList)) {
 
 //STEP 3 - Check if previously saved data exists and use it
 
-if(substr($scandir,strlen($scandir)-1)!==$dirseparator) $scandir.=$dirseparator;
+if(substr($scandir,strlen($scandir)-1)!==DIRECTORY_SEPARATOR) $scandir.=DIRECTORY_SEPARATOR;
 
 $olddata=array();
         if (file_exists($scandir.$datafilename)) {
